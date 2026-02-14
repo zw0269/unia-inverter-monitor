@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>125kW混逆智能管理系统 - 完整UI展示</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2563eb',
+                        solar: '#FFA500',
+                        battery: '#10B981',
+                        grid: '#3B82F6',
+                        load: '#8B5CF6',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .phone-frame {
+            width: 375px;
+            height: 812px;
+            overflow-y: auto;
+            overflow-x: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .phone-frame::-webkit-scrollbar {
+            width: 3px;
+        }
+        .phone-frame::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 2px;
+        }
+        @keyframes pulse-ring {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+        .pulse-ring {
+            animation: pulse-ring 2s ease-out infinite;
+        }
+        .energy-flow-line {
+            stroke-dasharray: 5, 5;
+            animation: dash 1s linear infinite;
+        }
+        @keyframes dash {
+            to { stroke-dashoffset: -10; }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-900 to-gray-800 min-h-screen py-12">
+    
+    <!-- Page Header -->
+    <div class="text-center mb-12">
+        <h1 class="text-5xl font-black text-white mb-3">125kW混逆智能管理系统</h1>
+        <p class="text-gray-400 text-lg">完整UI界面展示 · 9个核心页面 · Tailwind CSS</p>
+    </div>
+
+    <!-- Showcase Container -->
+    <div class="container mx-auto px-8">
+        
+        <!-- Row 1: 首页、统计、设备列表 -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-12 mb-12">
+            
+            <!-- Page 1: 首页 - 能量流 -->
+            <div class="flex flex-col items-center">
+                <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-t-2xl w-[375px] text-center">
+                    <span class="font-bold">首页 - 实时能量流</span>
+                </div>
+                <div class="phone-frame bg-white rounded-b-2xl">
+                    <!-- Status Bar -->
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span>14:23</span>
+                            <span class="font-semibold">125kW混逆系统</span>
+                            <div class="flex gap-1">
+                                <span>📶</span>
+                                <span>🔋98%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Hero Section -->
+                    <div class="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white p-6 pb-8">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <p class="text-xs opacity-80 mb-1">当前电站</p>
+                                <h2 class="text-2xl font-bold">工业园区1号站</h2>
+                                <p class="text-xs mt-1 opacity-90">125kW · 并网运行</p>
+                            </div>
+                            <div class="flex items-center gap-2 bg-white/20 backdrop-blur px-3 py-1 rounded-full text-xs">
+                                <span class="inline-block w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                正常
+                            </div>
+                        </div>
+
+                        <!-- Real-time Power Display -->
+                        <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-5 border border-white/20">
+                            <div class="text-center mb-4">
+                                <p class="text-xs opacity-80 mb-2">实时功率</p>
+                                <div class="text-5xl font-black mb-1">98.7</div>
+                                <p class="text-sm opacity-90">kW</p>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-xs">
+                                <div class="bg-white/10 rounded-lg p-2 text-center">
+                                    <div class="font-bold">105.2kW</div>
+                                    <div class="opacity-70">光伏</div>
+                                </div>
+                                <div class="bg-white/10 rounded-lg p-2 text-center">
+                                    <div class="font-bold text-green-300">-6.5kW</div>
+                                    <div class="opacity-70">储能充电</div>
+                                </div>
+                                <div class="bg-white/10 rounded-lg p-2 text-center">
+                                    <div class="font-bold">0kW</div>
+                                    <div class="opacity-70">电网</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="grid grid-cols-3 gap-2 mt-4 text-xs">
+                            <div class="text-center">
+                                <div class="font-bold text-xl">458.6</div>
+                                <div class="opacity-80">今日发电 kWh</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-bold text-xl">¥229</div>
+                                <div class="opacity-80">今日收益</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="font-bold text-xl">94%</div>
+                                <div class="opacity-80">自发自用率</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Energy Flow Visualization -->
+                    <div class="px-4 py-6 bg-gray-50">
+                        <h3 class="font-semibold text-gray-800 mb-4 flex items-center justify-between">
+                            <span>实时能量流</span>
+                            <span class="text-xs text-blue-600 flex items-center gap-1">
+                                <span class="w-2 h-2 bg-blue-600 rounded-full animate-pulse"></span>
+                                实时
+                            </span>
+                        </h3>
+                        
+                        <div class="bg-white rounded-2xl p-6 shadow-sm">
+                            <!-- SVG Energy Flow Diagram -->
+                            <svg viewBox="0 0 320 180" class="w-full">
+                                <!-- Solar Panel -->
+                                <g transform="translate(20, 20)">
+                                    <circle cx="30" cy="30" r="28" fill="#FFA500" opacity="0.2"/>
+                                    <circle cx="30" cy="30" r="20" fill="#FFA500"/>
+                                    <text x="30" y="35" text-anchor="middle" fill="white" font-size="20">☀️</text>
+                                    <text x="30" y="70" text-anchor="middle" fill="#666" font-size="10">光伏</text>
+                                    <text x="30" y="85" text-anchor="middle" fill="#FFA500" font-size="12" font-weight="bold">105.2kW</text>
+                                    <circle cx="30" cy="30" r="28" fill="none" stroke="#FFA500" stroke-width="2" class="pulse-ring"/>
+                                </g>
+
+                                <!-- Battery -->
+                                <g transform="translate(130, 20)">
+                                    <rect x="10" y="10" width="40" height="60" rx="5" fill="#10B981" opacity="0.2"/>
+                                    <rect x="15" y="15" width="30" height="43" rx="3" fill="#10B981"/>
+                                    <rect x="22" y="8" width="16" height="4" rx="2" fill="#10B981"/>
+                                    <text x="30" y="40" text-anchor="middle" fill="white" font-size="16" font-weight="bold">85%</text>
+                                    <text x="30" y="85" text-anchor="middle" fill="#666" font-size="10">储能</text>
+                                    <text x="30" y="100" text-anchor="middle" fill="#10B981" font-size="11" font-weight="bold">充电 6.5kW</text>
+                                </g>
+
+                                <!-- Load -->
+                                <g transform="translate(240, 20)">
+                                    <circle cx="30" cy="30" r="28" fill="#8B5CF6" opacity="0.2"/>
+                                    <circle cx="30" cy="30" r="20" fill="#8B5CF6"/>
+                                    <text x="30" y="35" text-anchor="middle" fill="white" font-size="20">🏭</text>
+                                    <text x="30" y="70" text-anchor="middle" fill="#666" font-size="10">负载</text>
+                                    <text x="30" y="85" text-anchor="middle" fill="#8B5CF6" font-size="12" font-weight="bold">98.7kW</text>
+                                </g>
+
+                                <!-- Flow Lines -->
+                                <line x1="70" y1="50" x2="140" y2="50" stroke="#FFA500" stroke-width="3" class="energy-flow-line"/>
+                                <polygon points="138,46 145,50 138,54" fill="#FFA500"/>
+                                
+                                <line x1="190" y1="50" x2="240" y2="50" stroke="#10B981" stroke-width="3" class="energy-flow-line"/>
+                                <polygon points="238,46 245,50 238,54" fill="#10B981"/>
+
+                                <!-- Grid Connection -->
+                                <g transform="translate(130, 130)">
+                                    <circle cx="30" cy="15" r="12" fill="#3B82F6"/>
+                                    <text x="30" y="20" text-anchor="middle" fill="white" font-size="14">⚡</text>
+                                    <text x="30" y="35" text-anchor="middle" fill="#666" font-size="9">电网</text>
+                                    <text x="30" y="47" text-anchor="middle" fill="#3B82F6" font-size="10" font-weight="bold">0kW</text>
+                                </g>
+                                <line x1="160" y1="90" x2="160" y2="130" stroke="#ccc" stroke-width="2" stroke-dasharray="3,3"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Device Status Cards -->
+                    <div class="px-4 pb-4 space-y-3">
+                        <!-- Inverter -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                                        <span class="text-xl">⚡</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">逆变器</h4>
+                                        <p class="text-xs text-gray-500">HYD-125KTL</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-green-600 font-medium">并网</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-xs text-center">
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">有功功率</div>
+                                    <div class="font-bold text-blue-600 mt-1">98.7kW</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">效率</div>
+                                    <div class="font-bold text-green-600 mt-1">98.2%</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">温度</div>
+                                    <div class="font-bold text-orange-600 mt-1">42°C</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Battery -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <div class="flex items-center justify-between mb-3">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <span class="text-xl">🔋</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">储能电池</h4>
+                                        <p class="text-xs text-gray-500">200kWh</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-blue-600 font-medium">充电中</span>
+                            </div>
+                            <div class="mb-2">
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-gray-500">电量 (SOC)</span>
+                                    <span class="font-bold text-green-600">85%</span>
+                                </div>
+                                <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-green-400 to-green-600" style="width: 85%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Nav -->
+                    <div class="bg-white border-t border-gray-200">
+                        <div class="grid grid-cols-4 gap-1 px-2 py-2">
+                            <button class="flex flex-col items-center py-2 text-blue-600">
+                                <span class="text-xl mb-1">🏠</span>
+                                <span class="text-xs font-medium">首页</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">📊</span>
+                                <span class="text-xs">统计</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">⚙️</span>
+                                <span class="text-xs">设备</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">👤</span>
+                                <span class="text-xs">我的</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 2: 统计数据页 -->
+            <div class="flex flex-col items-center">
+                <div class="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-t-2xl w-[375px] text-center">
+                    <span class="font-bold">统计数据页</span>
+                </div>
+                <div class="phone-frame bg-white rounded-b-2xl">
+                    <!-- Header -->
+                    <div class="bg-white border-b border-gray-200 px-4 py-3 flex items-center">
+                        <button class="mr-3 text-xl">←</button>
+                        <h1 class="text-lg font-semibold flex-1">统计数据</h1>
+                        <button class="text-sm text-blue-600">导出</button>
+                    </div>
+
+                    <!-- Time Filter -->
+                    <div class="bg-white px-4 py-3 border-b border-gray-200">
+                        <div class="flex gap-2">
+                            <button class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium">日</button>
+                            <button class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm">月</button>
+                            <button class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm">年</button>
+                            <button class="px-4 py-2 bg-gray-100 text-gray-600 rounded-lg text-sm">累计</button>
+                        </div>
+                        <div class="flex items-center justify-between mt-3">
+                            <button class="text-gray-400">◀</button>
+                            <span class="text-sm font-medium text-gray-700">2026-02-05</span>
+                            <button class="text-gray-400">▶</button>
+                        </div>
+                    </div>
+
+                    <!-- Stats Summary -->
+                    <div class="p-4 bg-gradient-to-br from-blue-50 to-indigo-50">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-white rounded-xl p-4 shadow-sm">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-2xl">⚡</span>
+                                    <span class="text-xs text-gray-500">今日发电量</span>
+                                </div>
+                                <div class="text-3xl font-bold text-blue-600">458.6</div>
+                                <div class="text-xs text-gray-500 mt-1">kWh</div>
+                                <div class="mt-2 text-xs text-green-600 flex items-center gap-1">
+                                    <span>↑</span>
+                                    <span>较昨日 +12.3%</span>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 shadow-sm">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-2xl">💰</span>
+                                    <span class="text-xs text-gray-500">今日收益</span>
+                                </div>
+                                <div class="text-3xl font-bold text-green-600">¥229</div>
+                                <div class="text-xs text-gray-500 mt-1">元</div>
+                                <div class="mt-2 text-xs text-green-600 flex items-center gap-1">
+                                    <span>↑</span>
+                                    <span>较昨日 +¥24</span>
+                                </div>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 shadow-sm">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-2xl">🔋</span>
+                                    <span class="text-xs text-gray-500">储能充放</span>
+                                </div>
+                                <div class="text-xl font-bold text-blue-600">充 52.3kWh</div>
+                                <div class="text-xl font-bold text-orange-600">放 48.7kWh</div>
+                            </div>
+                            <div class="bg-white rounded-xl p-4 shadow-sm">
+                                <div class="flex items-center gap-2 mb-2">
+                                    <span class="text-2xl">📈</span>
+                                    <span class="text-xs text-gray-500">自用率</span>
+                                </div>
+                                <div class="text-3xl font-bold text-purple-600">94%</div>
+                                <div class="text-xs text-gray-500 mt-1">自发自用</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Power Curve -->
+                    <div class="p-4">
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <h3 class="font-semibold text-gray-800 mb-3">24小时功率曲线</h3>
+                            <div class="h-48 bg-gray-50 rounded-lg">
+                                <canvas id="powerChart1"></canvas>
+                            </div>
+                            <div class="flex justify-around mt-4 text-xs">
+                                <div class="flex items-center gap-1">
+                                    <div class="w-3 h-3 bg-yellow-500 rounded"></div>
+                                    <span class="text-gray-600">光伏发电</span>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <div class="w-3 h-3 bg-purple-500 rounded"></div>
+                                    <span class="text-gray-600">负载功率</span>
+                                </div>
+                                <div class="flex items-center gap-1">
+                                    <div class="w-3 h-3 bg-green-500 rounded"></div>
+                                    <span class="text-gray-600">储能充放</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Environmental -->
+                    <div class="p-4">
+                        <div class="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 shadow-sm">
+                            <h3 class="font-semibold text-gray-800 mb-3 flex items-center gap-2">
+                                <span>🌱</span>
+                                <span>环保贡献</span>
+                            </h3>
+                            <div class="grid grid-cols-3 gap-3 text-center">
+                                <div>
+                                    <div class="text-2xl font-bold text-green-600">12.8</div>
+                                    <div class="text-xs text-gray-600 mt-1">节约标准煤(吨)</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-bold text-green-600">32.4</div>
+                                    <div class="text-xs text-gray-600 mt-1">CO₂减排(吨)</div>
+                                </div>
+                                <div>
+                                    <div class="text-2xl font-bold text-green-600">1,680</div>
+                                    <div class="text-xs text-gray-600 mt-1">等效植树(棵)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Nav -->
+                    <div class="bg-white border-t border-gray-200">
+                        <div class="grid grid-cols-4 gap-1 px-2 py-2">
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">🏠</span>
+                                <span class="text-xs">首页</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-blue-600">
+                                <span class="text-xl mb-1">📊</span>
+                                <span class="text-xs font-medium">统计</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">⚙️</span>
+                                <span class="text-xs">设备</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">👤</span>
+                                <span class="text-xs">我的</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 3: 设备列表页 -->
+            <div class="flex flex-col items-center">
+                <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-t-2xl w-[375px] text-center">
+                    <span class="font-bold">设备列表页</span>
+                </div>
+                <div class="phone-frame bg-white rounded-b-2xl">
+                    <!-- Header -->
+                    <div class="bg-white border-b border-gray-200 px-4 py-3 flex items-center">
+                        <button class="mr-3 text-xl">←</button>
+                        <h1 class="text-lg font-semibold flex-1">设备管理</h1>
+                        <button class="text-blue-600">+ 添加</button>
+                    </div>
+
+                    <!-- Search -->
+                    <div class="p-4 bg-gray-50">
+                        <div class="bg-white rounded-lg px-4 py-2 flex items-center gap-2 shadow-sm">
+                            <span class="text-gray-400">🔍</span>
+                            <input type="text" placeholder="搜索设备名称或SN" class="flex-1 outline-none text-sm">
+                        </div>
+                    </div>
+
+                    <!-- Device List -->
+                    <div class="p-4 space-y-3">
+                        <!-- Inverter -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                                        <span class="text-2xl">⚡</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">混合逆变器</h4>
+                                        <p class="text-xs text-gray-500">HYD-125KTL-H1</p>
+                                        <p class="text-xs text-gray-400 mt-1">SN: 2024125KW0001</p>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">运行中</span>
+                            </div>
+                            <div class="grid grid-cols-4 gap-2 text-xs text-center">
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">功率</div>
+                                    <div class="font-bold text-blue-600 mt-1">98.7kW</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">效率</div>
+                                    <div class="font-bold text-green-600 mt-1">98.2%</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">温度</div>
+                                    <div class="font-bold text-orange-600 mt-1">42°C</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">运行</div>
+                                    <div class="font-bold text-gray-700 mt-1">365天</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Battery -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                                        <span class="text-2xl">🔋</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">储能电池组</h4>
+                                        <p class="text-xs text-gray-500">LiFePO4 200kWh</p>
+                                        <p class="text-xs text-gray-400 mt-1">SN: BAT200K0001</p>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded-full">充电中</span>
+                            </div>
+                            <div class="mb-2">
+                                <div class="flex justify-between text-xs mb-1">
+                                    <span class="text-gray-500">电量 (SOC)</span>
+                                    <span class="font-bold text-green-600">85%</span>
+                                </div>
+                                <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                                    <div class="h-full bg-gradient-to-r from-green-400 to-green-600" style="width: 85%"></div>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-4 gap-2 text-xs text-center">
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">充电</div>
+                                    <div class="font-bold text-green-600 mt-1">6.5kW</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">健康</div>
+                                    <div class="font-bold text-blue-600 mt-1">98%</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">温度</div>
+                                    <div class="font-bold text-orange-600 mt-1">28°C</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">循环</div>
+                                    <div class="font-bold text-gray-700 mt-1">326次</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Smart Meter -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                                        <span class="text-2xl">📊</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">智能电表</h4>
+                                        <p class="text-xs text-gray-500">三相智能电表</p>
+                                        <p class="text-xs text-gray-400 mt-1">SN: METER-001</p>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">在线</span>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2 text-xs text-center">
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">电压</div>
+                                    <div class="font-bold text-blue-600 mt-1">380V</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">电流</div>
+                                    <div class="font-bold text-orange-600 mt-1">152A</div>
+                                </div>
+                                <div class="bg-gray-50 rounded-lg p-2">
+                                    <div class="text-gray-500">功率</div>
+                                    <div class="font-bold text-purple-600 mt-1">98.7kW</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PV Optimizer -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <div class="flex items-start justify-between mb-3">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center">
+                                        <span class="text-2xl">☀️</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">光伏优化器</h4>
+                                        <p class="text-xs text-gray-500">20台组串优化器</p>
+                                        <p class="text-xs text-gray-400 mt-1">在线: 20/20</p>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 bg-green-100 text-green-600 text-xs rounded-full">全部在线</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bottom Nav -->
+                    <div class="bg-white border-t border-gray-200">
+                        <div class="grid grid-cols-4 gap-1 px-2 py-2">
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">🏠</span>
+                                <span class="text-xs">首页</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">📊</span>
+                                <span class="text-xs">统计</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-blue-600">
+                                <span class="text-xl mb-1">⚙️</span>
+                                <span class="text-xs font-medium">设备</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">👤</span>
+                                <span class="text-xs">我的</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Row 2: 设备详情、告警、光伏组串 -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-12 mb-12">
+            
+            <!-- Page 4: 设备详情页 -->
+            <div class="flex flex-col items-center">
+                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-t-2xl w-[375px] text-center">
+                    <span class="font-bold">设备详情页</span>
+                </div>
+                <div class="phone-frame bg-white rounded-b-2xl">
+                    <!-- Header -->
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-3 flex items-center">
+                        <button class="mr-3 text-xl">←</button>
+                        <div class="flex-1">
+                            <h1 class="text-lg font-semibold">混合逆变器</h1>
+                            <p class="text-xs opacity-90">HYD-125KTL-H1</p>
+                        </div>
+                        <button>⋯</button>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="bg-gradient-to-br from-blue-600 to-blue-700 text-white px-4 pb-6">
+                        <div class="grid grid-cols-2 gap-2">
+                            <div class="bg-white/10 backdrop-blur rounded-lg p-3">
+                                <div class="text-xs opacity-80 mb-1">通信状态</div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                    <span class="font-semibold">连接成功</span>
+                                </div>
+                            </div>
+                            <div class="bg-white/10 backdrop-blur rounded-lg p-3">
+                                <div class="text-xs opacity-80 mb-1">运行状态</div>
+                                <div class="flex items-center gap-2">
+                                    <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
+                                    <span class="font-semibold">并网运行</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Parameters -->
+                    <div class="px-4 -mt-4 pb-4">
+                        <div class="bg-white rounded-xl shadow-lg p-4 mb-4">
+                            <h3 class="font-semibold text-gray-800 mb-3">实时参数</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="bg-blue-50 rounded-lg p-3">
+                                    <div class="text-xs text-gray-600 mb-1">额定功率</div>
+                                    <div class="text-2xl font-bold text-blue-600">125.0</div>
+                                    <div class="text-xs text-gray-500">kW</div>
+                                </div>
+                                <div class="bg-green-50 rounded-lg p-3">
+                                    <div class="text-xs text-gray-600 mb-1">有功功率</div>
+                                    <div class="text-2xl font-bold text-green-600">98.7</div>
+                                    <div class="text-xs text-gray-500">kW</div>
+                                </div>
+                                <div class="bg-purple-50 rounded-lg p-3">
+                                    <div class="text-xs text-gray-600 mb-1">无功功率</div>
+                                    <div class="text-2xl font-bold text-purple-600">2.3</div>
+                                    <div class="text-xs text-gray-500">kVar</div>
+                                </div>
+                                <div class="bg-orange-50 rounded-lg p-3">
+                                    <div class="text-xs text-gray-600 mb-1">效率</div>
+                                    <div class="text-2xl font-bold text-orange-600">98.2</div>
+                                    <div class="text-xs text-gray-500">%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- PV Side -->
+                        <div class="bg-white rounded-xl shadow-sm p-4 mb-4">
+                            <h3 class="font-semibold text-gray-800 mb-3">光伏侧参数</h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">PV电压</span>
+                                    <span class="font-semibold text-gray-800">720.5 V</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">PV电流</span>
+                                    <span class="font-semibold text-gray-800">146.2 A</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">PV功率</span>
+                                    <span class="font-semibold text-yellow-600">105.2 kW</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">MPPT效率</span>
+                                    <span class="font-semibold text-green-600">99.7%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grid Side -->
+                        <div class="bg-white rounded-xl shadow-sm p-4 mb-4">
+                            <h3 class="font-semibold text-gray-800 mb-3">电网侧参数</h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">A相电压</span>
+                                    <span class="font-semibold text-gray-800">220.3 V</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">B相电压</span>
+                                    <span class="font-semibold text-gray-800">219.8 V</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">C相电压</span>
+                                    <span class="font-semibold text-gray-800">220.5 V</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">频率</span>
+                                    <span class="font-semibold text-blue-600">50.02 Hz</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">功率因数</span>
+                                    <span class="font-semibold text-green-600">0.998</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="bg-blue-600 text-white rounded-xl py-3 font-medium">
+                                ⚙️ 参数设置
+                            </button>
+                            <button class="bg-gray-100 text-gray-700 rounded-xl py-3 font-medium">
+                                📋 查看日志
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 5: 告警页面 -->
+            <div class="flex flex-col items-center">
+                <div class="bg-gradient-to-r from-red-600 to-orange-600 text-white px-6 py-3 rounded-t-2xl w-[375px] text-center">
+                    <span class="font-bold">告警中心</span>
+                </div>
+                <div class="phone-frame bg-white rounded-b-2xl">
+                    <!-- Header -->
+                    <div class="bg-white border-b border-gray-200 px-4 py-3 flex items-center">
+                        <button class="mr-3 text-xl">←</button>
+                        <h1 class="text-lg font-semibold flex-1">告警中心</h1>
+                        <button class="text-sm text-blue-600">设置</button>
+                    </div>
+
+                    <!-- Stats -->
+                    <div class="p-4 bg-gray-50">
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+                                <div class="text-2xl font-bold text-red-600">0</div>
+                                <div class="text-xs text-gray-600 mt-1">严重告警</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+                                <div class="text-2xl font-bold text-yellow-600">1</div>
+                                <div class="text-xs text-gray-600 mt-1">警告</div>
+                            </div>
+                            <div class="bg-white rounded-lg p-3 text-center shadow-sm">
+                                <div class="text-2xl font-bold text-blue-600">3</div>
+                                <div class="text-xs text-gray-600 mt-1">提示</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Alert List -->
+                    <div class="p-4 space-y-3">
+                        <!-- Warning -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-yellow-500">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl">⚠️</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">电池温度偏高</h4>
+                                        <p class="text-xs text-gray-500">电池组 BAT200K0001</p>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs rounded-full">警告</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">电池温度达到35°C，建议检查散热系统</p>
+                            <div class="flex items-center justify-between text-xs text-gray-500">
+                                <span>2026-02-05 14:23:15</span>
+                                <button class="text-blue-600 font-medium">确认</button>
+                            </div>
+                        </div>
+
+                        <!-- Info -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-blue-500">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl">ℹ️</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">峰谷套利模式启动</h4>
+                                        <p class="text-xs text-gray-500">储能系统</p>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">提示</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">系统已自动切换至峰谷套利模式，开始充电</p>
+                            <div class="flex items-center justify-between text-xs text-gray-500">
+                                <span>2026-02-05 14:00:00</span>
+                                <button class="text-blue-600 font-medium">确认</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-blue-500">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl">📊</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">今日发电量突破400kWh</h4>
+                                        <p class="text-xs text-gray-500">光伏系统</p>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full">提示</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">今日光伏发电量已达400kWh，创本月新高</p>
+                            <div class="flex items-center justify-between text-xs text-gray-500">
+                                <span>2026-02-05 13:45:30</span>
+                                <button class="text-blue-600 font-medium">确认</button>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-4 shadow-sm border-l-4 border-green-500">
+                            <div class="flex items-start justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-2xl">✅</span>
+                                    <div>
+                                        <h4 class="font-semibold text-gray-800">设备通信恢复正常</h4>
+                                        <p class="text-xs text-gray-500">逆变器 HYD-125KTL</p>
+                                    </div>
+                                </div>
+                                <span class="px-2 py-1 bg-green-100 text-green-700 text-xs rounded-full">已恢复</span>
+                            </div>
+                            <p class="text-sm text-gray-600 mb-2">设备通信已恢复，系统运行正常</p>
+                            <div class="flex items-center justify-between text-xs text-gray-500">
+                                <span>2026-02-05 09:15:20</span>
+                                <button class="text-gray-400">已处理</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 6: 光伏组串监控 -->
+            <div class="flex flex-col items-center">
+                <div class="bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-6 py-3 rounded-t-2xl w-[375px] text-center">
+                    <span class="font-bold">光伏组串监控</span>
+                </div>
+                <div class="phone-frame bg-white rounded-b-2xl">
+                    <!-- Header -->
+                    <div class="bg-white border-b border-gray-200 px-4 py-3 flex items-center">
+                        <button class="mr-3 text-xl">←</button>
+                        <h1 class="text-lg font-semibold flex-1">光伏组串监控</h1>
+                        <button class="text-sm text-blue-600">IV曲线</button>
+                    </div>
+
+                    <!-- Overview -->
+                    <div class="p-4 bg-gradient-to-br from-yellow-50 to-orange-50">
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <h3 class="font-semibold text-gray-800 mb-3">组串概览</h3>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-green-600">20</div>
+                                    <div class="text-xs text-gray-600 mt-1">在线组串</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-3xl font-bold text-yellow-600">105.2</div>
+                                    <div class="text-xs text-gray-600 mt-1">总功率 (kW)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- String List -->
+                    <div class="p-4 space-y-2">
+                        <!-- Normal -->
+                        <div class="bg-white rounded-xl p-3 shadow-sm">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <span class="text-green-600 font-bold text-sm">1</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-sm text-gray-800">组串 #1</h4>
+                                        <p class="text-xs text-gray-500">20块×550W</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm font-bold text-green-600">5.2 kW</div>
+                                    <div class="text-xs text-gray-500">730V / 7.1A</div>
+                                </div>
+                            </div>
+                            <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-green-400 to-green-600" style="width: 94%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>今日: 26.8kWh</span>
+                                <span>效率: 94%</span>
+                            </div>
+                        </div>
+
+                        <div class="bg-white rounded-xl p-3 shadow-sm">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                        <span class="text-green-600 font-bold text-sm">2</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-sm text-gray-800">组串 #2</h4>
+                                        <p class="text-xs text-gray-500">20块×550W</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm font-bold text-green-600">5.3 kW</div>
+                                    <div class="text-xs text-gray-500">732V / 7.2A</div>
+                                </div>
+                            </div>
+                            <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-green-400 to-green-600" style="width: 96%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>今日: 27.2kWh</span>
+                                <span>效率: 96%</span>
+                            </div>
+                        </div>
+
+                        <!-- Warning -->
+                        <div class="bg-white rounded-xl p-3 shadow-sm border-l-4 border-yellow-500">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+                                        <span class="text-yellow-600 font-bold text-sm">3</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold text-sm text-gray-800">组串 #3</h4>
+                                        <p class="text-xs text-yellow-600">⚠️ 功率偏低</p>
+                                    </div>
+                                </div>
+                                <div class="text-right">
+                                    <div class="text-sm font-bold text-yellow-600">4.1 kW</div>
+                                    <div class="text-xs text-gray-500">710V / 5.8A</div>
+                                </div>
+                            </div>
+                            <div class="h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-yellow-400 to-yellow-600" style="width: 74%"></div>
+                            </div>
+                            <div class="flex justify-between text-xs text-gray-500 mt-1">
+                                <span>今日: 21.3kWh</span>
+                                <span class="text-yellow-600">效率: 74%</span>
+                            </div>
+                        </div>
+
+                        <!-- More -->
+                        <div class="text-center py-4">
+                            <button class="text-blue-600 text-sm font-medium">展开更多组串 (17)</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Row 3: 设备添加、参数设置、我的页面 -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-12">
+            
+            <!-- Page 7: 设备添加 -->
+            <div class="flex flex-col items-center">
+                <div class="bg-gradient-to-r from-teal-600 to-cyan-600 text-white px-6 py-3 rounded-t-2xl w-[375px] text-center">
+                    <span class="font-bold">设备添加页</span>
+                </div>
+                <div class="phone-frame bg-white rounded-b-2xl">
+                    <!-- Header -->
+                    <div class="bg-white border-b border-gray-200 px-4 py-3 flex items-center">
+                        <button class="mr-3 text-xl">←</button>
+                        <h1 class="text-lg font-semibold">添加设备</h1>
+                    </div>
+
+                    <div class="p-4">
+                        <h3 class="font-semibold text-gray-800 mb-4">选择添加方式</h3>
+                        
+                        <!-- Bluetooth -->
+                        <button class="w-full bg-white rounded-xl p-4 shadow-sm mb-3">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center">
+                                    <span class="text-2xl">📱</span>
+                                </div>
+                                <div class="flex-1 text-left">
+                                    <h4 class="font-semibold text-gray-800">蓝牙添加</h4>
+                                    <p class="text-xs text-gray-500 mt-1">通过蓝牙搜索附近设备</p>
+                                </div>
+                                <span class="text-gray-400 text-xl">→</span>
+                            </div>
+                        </button>
+
+                        <!-- QR -->
+                        <button class="w-full bg-white rounded-xl p-4 shadow-sm mb-3">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
+                                    <span class="text-2xl">📷</span>
+                                </div>
+                                <div class="flex-1 text-left">
+                                    <h4 class="font-semibold text-gray-800">扫码添加</h4>
+                                    <p class="text-xs text-gray-500 mt-1">扫描设备二维码快速添加</p>
+                                </div>
+                                <span class="text-gray-400 text-xl">→</span>
+                            </div>
+                        </button>
+
+                        <!-- Manual -->
+                        <button class="w-full bg-white rounded-xl p-4 shadow-sm">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
+                                    <span class="text-2xl">⌨️</span>
+                                </div>
+                                <div class="flex-1 text-left">
+                                    <h4 class="font-semibold text-gray-800">手动输入</h4>
+                                    <p class="text-xs text-gray-500 mt-1">输入设备序列号(SN)添加</p>
+                                </div>
+                                <span class="text-gray-400 text-xl">→</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <!-- Help -->
+                    <div class="p-4">
+                        <div class="bg-blue-50 rounded-xl p-4">
+                            <h4 class="font-semibold text-blue-800 mb-2 flex items-center gap-2">
+                                <span>💡</span>
+                                <span>添加提示</span>
+                            </h4>
+                            <ul class="text-sm text-blue-700 space-y-1">
+                                <li>• 请确保设备已上电并处于待连接状态</li>
+                                <li>• 蓝牙添加需开启手机蓝牙功能</li>
+                                <li>• 扫码时请对准设备二维码标签</li>
+                                <li>• 首次连接需输入设备默认密码</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 8: 参数设置 -->
+            <div class="flex flex-col items-center">
+                <div class="bg-gradient-to-r from-gray-700 to-gray-900 text-white px-6 py-3 rounded-t-2xl w-[375px] text-center">
+                    <span class="font-bold">参数设置页</span>
+                </div>
+                <div class="phone-frame bg-white rounded-b-2xl">
+                    <!-- Header -->
+                    <div class="bg-white border-b border-gray-200 px-4 py-3 flex items-center">
+                        <button class="mr-3 text-xl">←</button>
+                        <h1 class="text-lg font-semibold">参数设置</h1>
+                    </div>
+
+                    <div class="p-4 space-y-4">
+                        <!-- Work Mode -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <h3 class="font-semibold text-gray-800 mb-3">工作模式</h3>
+                            <div class="space-y-2">
+                                <label class="flex items-center justify-between p-3 bg-blue-50 rounded-lg border-2 border-blue-500">
+                                    <div>
+                                        <div class="font-semibold text-gray-800">自发自用</div>
+                                        <div class="text-xs text-gray-600 mt-1">优先使用光伏发电，余电存储或上网</div>
+                                    </div>
+                                    <input type="radio" name="workMode" checked class="w-5 h-5">
+                                </label>
+                                <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border-2 border-transparent">
+                                    <div>
+                                        <div class="font-semibold text-gray-800">峰谷套利</div>
+                                        <div class="text-xs text-gray-600 mt-1">低价时充电，高价时放电</div>
+                                    </div>
+                                    <input type="radio" name="workMode" class="w-5 h-5">
+                                </label>
+                                <label class="flex items-center justify-between p-3 bg-gray-50 rounded-lg border-2 border-transparent">
+                                    <div>
+                                        <div class="font-semibold text-gray-800">备电模式</div>
+                                        <div class="text-xs text-gray-600 mt-1">保持电池满电状态，应急使用</div>
+                                    </div>
+                                    <input type="radio" name="workMode" class="w-5 h-5">
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Battery Strategy -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <h3 class="font-semibold text-gray-800 mb-3">充放电策略</h3>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-gray-600">充电功率限制</span>
+                                        <span class="font-semibold text-blue-600">50 kW</span>
+                                    </div>
+                                    <input type="range" min="0" max="100" value="50" class="w-full">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-gray-600">放电功率限制</span>
+                                        <span class="font-semibold text-orange-600">50 kW</span>
+                                    </div>
+                                    <input type="range" min="0" max="100" value="50" class="w-full">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-gray-600">SOC下限</span>
+                                        <span class="font-semibold text-green-600">20%</span>
+                                    </div>
+                                    <input type="range" min="0" max="100" value="20" class="w-full">
+                                </div>
+                                <div>
+                                    <div class="flex justify-between text-sm mb-2">
+                                        <span class="text-gray-600">SOC上限</span>
+                                        <span class="font-semibold text-green-600">95%</span>
+                                    </div>
+                                    <input type="range" min="0" max="100" value="95" class="w-full">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Grid Settings -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <h3 class="font-semibold text-gray-800 mb-3">电网设置</h3>
+                            <div class="space-y-3">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <div class="font-semibold text-sm text-gray-800">防逆流</div>
+                                        <div class="text-xs text-gray-600 mt-1">禁止向电网输送电力</div>
+                                    </div>
+                                    <label class="relative inline-block w-12 h-6">
+                                        <input type="checkbox" class="sr-only peer">
+                                        <div class="w-full h-full bg-gray-300 rounded-full peer-checked:bg-blue-600 transition"></div>
+                                        <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition peer-checked:translate-x-6"></div>
+                                    </label>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <div class="font-semibold text-sm text-gray-800">并离网自动切换</div>
+                                        <div class="text-xs text-gray-600 mt-1">电网异常时自动切换到离网模式</div>
+                                    </div>
+                                    <label class="relative inline-block w-12 h-6">
+                                        <input type="checkbox" checked class="sr-only peer">
+                                        <div class="w-full h-full bg-blue-600 rounded-full transition"></div>
+                                        <div class="absolute right-1 top-1 w-4 h-4 bg-white rounded-full transition"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Save -->
+                        <button class="w-full bg-blue-600 text-white rounded-xl py-3 font-semibold">
+                            保存设置
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Page 9: 我的页面 -->
+            <div class="flex flex-col items-center">
+                <div class="bg-gradient-to-r from-pink-600 to-rose-600 text-white px-6 py-3 rounded-t-2xl w-[375px] text-center">
+                    <span class="font-bold">我的页面</span>
+                </div>
+                <div class="phone-frame bg-white rounded-b-2xl">
+                    <!-- Profile Header -->
+                    <div class="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-6">
+                        <div class="flex items-center gap-4">
+                            <div class="w-16 h-16 bg-white/20 backdrop-blur rounded-full flex items-center justify-center">
+                                <span class="text-3xl">👤</span>
+                            </div>
+                            <div>
+                                <h2 class="text-xl font-bold">张工</h2>
+                                <p class="text-sm opacity-90">系统管理员</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="p-4 space-y-4">
+                        <!-- Station Info -->
+                        <div class="bg-white rounded-xl p-4 shadow-sm">
+                            <h3 class="font-semibold text-gray-800 mb-3">电站信息</h3>
+                            <div class="space-y-2 text-sm">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">电站名称</span>
+                                    <span class="font-semibold text-gray-800">工业园区1号站</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">装机容量</span>
+                                    <span class="font-semibold text-blue-600">125 kW</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">储能容量</span>
+                                    <span class="font-semibold text-green-600">200 kWh</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-gray-600">安装日期</span>
+                                    <span class="font-semibold text-gray-800">2025-02-05</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Menu -->
+                        <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                            <button class="w-full flex items-center justify-between p-4 border-b border-gray-100">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xl">📱</span>
+                                    <span class="text-gray-800">消息中心</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <span class="px-2 py-0.5 bg-red-500 text-white text-xs rounded-full">3</span>
+                                    <span class="text-gray-400">→</span>
+                                </div>
+                            </button>
+                            <button class="w-full flex items-center justify-between p-4 border-b border-gray-100">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xl">⚙️</span>
+                                    <span class="text-gray-800">系统设置</span>
+                                </div>
+                                <span class="text-gray-400">→</span>
+                            </button>
+                            <button class="w-full flex items-center justify-between p-4 border-b border-gray-100">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xl">❓</span>
+                                    <span class="text-gray-800">帮助与反馈</span>
+                                </div>
+                                <span class="text-gray-400">→</span>
+                            </button>
+                            <button class="w-full flex items-center justify-between p-4">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-xl">ℹ️</span>
+                                    <span class="text-gray-800">关于</span>
+                                </div>
+                                <span class="text-gray-400">→</span>
+                            </div>
+                        </div>
+
+                        <!-- Version -->
+                        <div class="text-center text-sm text-gray-500">
+                            <p>版本 v1.0.0</p>
+                            <p class="mt-1">© 2026 125kW混逆智能管理系统</p>
+                        </div>
+
+                        <!-- Logout -->
+                        <button class="w-full bg-red-50 text-red-600 rounded-xl py-3 font-semibold">
+                            退出登录
+                        </button>
+                    </div>
+
+                    <!-- Bottom Nav -->
+                    <div class="bg-white border-t border-gray-200">
+                        <div class="grid grid-cols-4 gap-1 px-2 py-2">
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">🏠</span>
+                                <span class="text-xs">首页</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">📊</span>
+                                <span class="text-xs">统计</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-gray-500">
+                                <span class="text-xl mb-1">⚙️</span>
+                                <span class="text-xs">设备</span>
+                            </button>
+                            <button class="flex flex-col items-center py-2 text-blue-600">
+                                <span class="text-xl mb-1">👤</span>
+                                <span class="text-xs font-medium">我的</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Initialize Charts -->
+    <script>
+        window.addEventListener('load', function() {
+            const ctx1 = document.getElementById('powerChart1');
+            if (ctx1) {
+                new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: ['00:00', '03:00', '06:00', '09:00', '12:00', '15:00', '18:00', '21:00'],
+                        datasets: [
+                            {
+                                label: '光伏发电',
+                                data: [0, 0, 5, 45, 85, 95, 60, 10],
+                                borderColor: '#FFA500',
+                                backgroundColor: 'rgba(255, 165, 0, 0.1)',
+                                tension: 0.4
+                            },
+                            {
+                                label: '负载功率',
+                                data: [30, 25, 35, 60, 75, 80, 70, 50],
+                                borderColor: '#8B5CF6',
+                                backgroundColor: 'rgba(139, 92, 246, 0.1)',
+                                tension: 0.4
+                            },
+                            {
+                                label: '储能充放',
+                                data: [0, 0, -5, -15, 10, 15, 10, -20],
+                                borderColor: '#10B981',
+                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                                tension: 0.4
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

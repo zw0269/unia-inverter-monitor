@@ -1,0 +1,338 @@
+/**
+ * Tailwind样式转换Mixin
+ * 将常用的Tailwind CSS类转换为SCSS Mixin
+ * 适配UniApp的rpx单位系统
+ */
+
+// ==================== 卡片样式 ====================
+
+/**
+ * 基础卡片
+ * 类似于 Tailwind: bg-white rounded-xl p-4 shadow-sm
+ */
+@mixin card {
+  background: #ffffff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  box-shadow: 0 2rpx 16rpx rgba(0, 0, 0, 0.08);
+}
+
+/**
+ * 大圆角卡片
+ */
+@mixin card-lg {
+  background: #ffffff;
+  border-radius: 32rpx;
+  padding: 40rpx;
+  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.1);
+}
+
+/**
+ * 小卡片
+ */
+@mixin card-sm {
+  background: #ffffff;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+}
+
+// ==================== 毛玻璃效果 ====================
+
+/**
+ * 毛玻璃卡片
+ * 类似于 Tailwind: bg-white/10 backdrop-blur-lg border border-white/20
+ */
+@mixin glass-card {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(40rpx);
+  -webkit-backdrop-filter: blur(40rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.2);
+  border-radius: 32rpx;
+  padding: 32rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+
+  // 降级方案 (不支持backdrop-filter的浏览器)
+  @supports not (backdrop-filter: blur(40rpx)) {
+    background: rgba(255, 255, 255, 0.85);
+  }
+}
+
+/**
+ * 深色毛玻璃卡片
+ */
+@mixin glass-card-dark {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(40rpx);
+  -webkit-backdrop-filter: blur(40rpx);
+  border: 1rpx solid rgba(255, 255, 255, 0.1);
+  border-radius: 32rpx;
+  padding: 32rpx;
+  color: #ffffff;
+
+  @supports not (backdrop-filter: blur(40rpx)) {
+    background: rgba(0, 0, 0, 0.7);
+  }
+}
+
+// ==================== 渐变背景 ====================
+
+/**
+ * 渐变背景
+ * @param {Color} $from - 起始颜色
+ * @param {Color} $to - 结束颜色
+ * @param {String} $angle - 渐变角度 (默认135deg)
+ */
+@mixin gradient-bg($from, $to, $angle: 135deg) {
+  background: linear-gradient($angle, $from, $to);
+}
+
+/**
+ * 蓝色渐变
+ */
+@mixin gradient-blue {
+  @include gradient-bg(#3B82F6, #1D4ED8);
+}
+
+/**
+ * 绿色渐变
+ */
+@mixin gradient-green {
+  @include gradient-bg(#10B981, #059669);
+}
+
+/**
+ * 紫色渐变
+ */
+@mixin gradient-purple {
+  @include gradient-bg(#8B5CF6, #6D28D9);
+}
+
+/**
+ * 橙色渐变
+ */
+@mixin gradient-orange {
+  @include gradient-bg(#F59E0B, #D97706);
+}
+
+// ==================== 文字样式 ====================
+
+/**
+ * 标题文字 - 大
+ */
+@mixin text-title-lg {
+  font-size: 48rpx;
+  font-weight: 700;
+  line-height: 1.2;
+  color: #1F2937;
+}
+
+/**
+ * 标题文字 - 中
+ */
+@mixin text-title {
+  font-size: 36rpx;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #1F2937;
+}
+
+/**
+ * 标题文字 - 小
+ */
+@mixin text-title-sm {
+  font-size: 32rpx;
+  font-weight: 600;
+  line-height: 1.4;
+  color: #374151;
+}
+
+/**
+ * 正文文字
+ */
+@mixin text-body {
+  font-size: 28rpx;
+  font-weight: 400;
+  line-height: 1.6;
+  color: #4B5563;
+}
+
+/**
+ * 小号文字
+ */
+@mixin text-sm {
+  font-size: 24rpx;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #6B7280;
+}
+
+/**
+ * 辅助文字
+ */
+@mixin text-caption {
+  font-size: 20rpx;
+  font-weight: 400;
+  line-height: 1.4;
+  color: #9CA3AF;
+}
+
+// ==================== 布局样式 ====================
+
+/**
+ * Flex居中
+ */
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/**
+ * Flex两端对齐
+ */
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/**
+ * Grid布局 - 2列
+ */
+@mixin grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24rpx;
+}
+
+/**
+ * Grid布局 - 3列
+ */
+@mixin grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24rpx;
+}
+
+/**
+ * Grid布局 - 4列
+ */
+@mixin grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16rpx;
+}
+
+// ==================== 按钮样式 ====================
+
+/**
+ * 主要按钮
+ */
+@mixin btn-primary {
+  background: #3B82F6;
+  color: #ffffff;
+  padding: 24rpx 48rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s ease;
+
+  &:active {
+    background: #2563EB;
+    transform: scale(0.98);
+  }
+}
+
+/**
+ * 次要按钮
+ */
+@mixin btn-secondary {
+  background: #F3F4F6;
+  color: #374151;
+  padding: 24rpx 48rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  text-align: center;
+  transition: all 0.2s ease;
+
+  &:active {
+    background: #E5E7EB;
+    transform: scale(0.98);
+  }
+}
+
+/**
+ * 渐变按钮
+ */
+@mixin btn-gradient {
+  @include gradient-bg(#3B82F6, #1D4ED8);
+  color: #ffffff;
+  padding: 24rpx 48rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 8rpx 24rpx rgba(59, 130, 246, 0.3);
+  transition: all 0.2s ease;
+
+  &:active {
+    transform: scale(0.98);
+    box-shadow: 0 4rpx 16rpx rgba(59, 130, 246, 0.2);
+  }
+}
+
+// ==================== 阴影效果 ====================
+
+/**
+ * 小阴影
+ */
+@mixin shadow-sm {
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.05);
+}
+
+/**
+ * 中等阴影
+ */
+@mixin shadow {
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
+}
+
+/**
+ * 大阴影
+ */
+@mixin shadow-lg {
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.12);
+}
+
+/**
+ * 超大阴影
+ */
+@mixin shadow-xl {
+  box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.15);
+}
+
+// ==================== 过渡动画 ====================
+
+/**
+ * 通用过渡
+ */
+@mixin transition {
+  transition: all 0.2s ease;
+}
+
+/**
+ * 颜色过渡
+ */
+@mixin transition-colors {
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+/**
+ * 变形过渡
+ */
+@mixin transition-transform {
+  transition: transform 0.2s ease;
+}

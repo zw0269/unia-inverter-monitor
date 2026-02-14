@@ -1,0 +1,523 @@
+/**
+ * 动画样式库
+ * 提供常用的CSS动画效果
+ */
+
+// ==================== 脉冲动画 ====================
+
+/**
+ * 脉冲环动画 (用于能量流节点)
+ */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
+}
+
+.pulse-ring {
+  animation: pulse-ring 2s ease-out infinite;
+}
+
+/**
+ * 点脉冲动画 (用于状态指示器)
+ */
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+/**
+ * 通用脉冲动画
+ */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+// ==================== 流动动画 ====================
+
+/**
+ * 能量流动线条动画
+ */
+@keyframes flow {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  100% {
+    stroke-dashoffset: -40rpx;
+  }
+}
+
+.flow-line {
+  stroke-dasharray: 10rpx, 10rpx;
+  animation: flow 1s linear infinite;
+}
+
+/**
+ * 进度条流动动画
+ */
+@keyframes progress-flow {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 40rpx 0;
+  }
+}
+
+.progress-flow {
+  animation: progress-flow 1s linear infinite;
+}
+
+// ==================== 淡入动画 ====================
+
+/**
+ * 淡入
+ */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.fade-in {
+  animation: fade-in 0.3s ease;
+}
+
+/**
+ * 淡入向上
+ */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(40rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fade-in-up 0.4s ease;
+}
+
+/**
+ * 淡入向下
+ */
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-40rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-down {
+  animation: fade-in-down 0.4s ease;
+}
+
+/**
+ * 淡入向左
+ */
+@keyframes fade-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-40rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in-left {
+  animation: fade-in-left 0.4s ease;
+}
+
+/**
+ * 淡入向右
+ */
+@keyframes fade-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(40rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.fade-in-right {
+  animation: fade-in-right 0.4s ease;
+}
+
+// ==================== 缩放动画 ====================
+
+/**
+ * 放大进入
+ */
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.zoom-in {
+  animation: zoom-in 0.3s ease;
+}
+
+/**
+ * 缩小退出
+ */
+@keyframes zoom-out {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+
+.zoom-out {
+  animation: zoom-out 0.3s ease;
+}
+
+// ==================== 旋转动画 ====================
+
+/**
+ * 旋转加载
+ */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/**
+ * 慢速旋转
+ */
+.spin-slow {
+  animation: spin 2s linear infinite;
+}
+
+/**
+ * 快速旋转
+ */
+.spin-fast {
+  animation: spin 0.5s linear infinite;
+}
+
+// ==================== 弹跳动画 ====================
+
+/**
+ * 弹跳
+ */
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20rpx);
+  }
+}
+
+.bounce {
+  animation: bounce 1s infinite;
+}
+
+/**
+ * 弹跳进入
+ */
+@keyframes bounce-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.bounce-in {
+  animation: bounce-in 0.5s ease;
+}
+
+// ==================== 摇晃动画 ====================
+
+/**
+ * 水平摇晃
+ */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateX(-10rpx);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateX(10rpx);
+  }
+}
+
+.shake {
+  animation: shake 0.5s ease;
+}
+
+/**
+ * 垂直摇晃
+ */
+@keyframes shake-vertical {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  10%, 30%, 50%, 70%, 90% {
+    transform: translateY(-10rpx);
+  }
+  20%, 40%, 60%, 80% {
+    transform: translateY(10rpx);
+  }
+}
+
+.shake-vertical {
+  animation: shake-vertical 0.5s ease;
+}
+
+// ==================== 闪烁动画 ====================
+
+/**
+ * 闪烁
+ */
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.blink {
+  animation: blink 1s ease infinite;
+}
+
+/**
+ * 快速闪烁
+ */
+.blink-fast {
+  animation: blink 0.5s ease infinite;
+}
+
+// ==================== 滑动动画 ====================
+
+/**
+ * 从上滑入
+ */
+@keyframes slide-in-top {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.slide-in-top {
+  animation: slide-in-top 0.3s ease;
+}
+
+/**
+ * 从下滑入
+ */
+@keyframes slide-in-bottom {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.slide-in-bottom {
+  animation: slide-in-bottom 0.3s ease;
+}
+
+/**
+ * 从左滑入
+ */
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.slide-in-left {
+  animation: slide-in-left 0.3s ease;
+}
+
+/**
+ * 从右滑入
+ */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.slide-in-right {
+  animation: slide-in-right 0.3s ease;
+}
+
+// ==================== 加载动画 ====================
+
+/**
+ * 点点点加载动画
+ */
+@keyframes loading-dots {
+  0%, 20% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.loading-dot {
+  animation: loading-dots 1.4s infinite;
+
+  &:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  &:nth-child(3) {
+    animation-delay: 0.4s;
+  }
+}
+
+// ==================== 渐变背景动画 ====================
+
+/**
+ * 渐变背景流动
+ */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-shift {
+  background-size: 200% 200%;
+  animation: gradient-shift 3s ease infinite;
+}
+
+// ==================== 延迟类 ====================
+
+/**
+ * 动画延迟类
+ */
+.delay-100 {
+  animation-delay: 0.1s;
+}
+
+.delay-200 {
+  animation-delay: 0.2s;
+}
+
+.delay-300 {
+  animation-delay: 0.3s;
+}
+
+.delay-500 {
+  animation-delay: 0.5s;
+}
+
+.delay-1000 {
+  animation-delay: 1s;
+}
+
+// ==================== 动画持续时间 ====================
+
+/**
+ * 动画速度类
+ */
+.duration-fast {
+  animation-duration: 0.2s;
+}
+
+.duration-normal {
+  animation-duration: 0.3s;
+}
+
+.duration-slow {
+  animation-duration: 0.5s;
+}
+
+.duration-slower {
+  animation-duration: 1s;
+}

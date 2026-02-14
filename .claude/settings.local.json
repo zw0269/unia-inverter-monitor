@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(powershell -Command:*)",
+      "Bash(dir:*)",
+      "Bash(findstr:*)",
+      "Bash(node --version:*)",
+      "Bash(npm:*)",
+      "Bash(test:*)",
+      "Bash(npx tsc:*)",
+      "Bash(ls:*)",
+      "Bash(timeout:*)",
+      "WebSearch",
+      "Bash(npx degit:*)",
+      "Bash(taskkill:*)"
+    ]
+  }
+}

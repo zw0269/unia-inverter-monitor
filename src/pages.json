@@ -1,0 +1,202 @@
+{
+  "pages": [
+    {
+      "path": "pages/index/index",
+      "style": {
+        "navigationBarTitleText": "设备监控",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/statistics/index",
+      "style": {
+        "navigationBarTitleText": "统计分析",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/device/index",
+      "style": {
+        "navigationBarTitleText": "设备管理",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/profile/index",
+      "style": {
+        "navigationBarTitleText": "个人中心",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/bluetooth/scan",
+      "style": {
+        "navigationBarTitleText": "扫描设备",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/alarm/list",
+      "style": {
+        "navigationBarTitleText": "报警记录",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/device/detail",
+      "style": {
+        "navigationBarTitleText": "设备详情",
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/device/pv-strings",
+      "style": {
+        "navigationBarTitleText": "光伏组串监控",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/components-demo/index",
+      "style": {
+        "navigationBarTitleText": "组件演示",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/device/add",
+      "style": {
+        "navigationBarTitleText": "添加设备",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/device/list",
+      "style": {
+        "navigationBarTitleText": "我的设备",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/device/edit",
+      "style": {
+        "navigationBarTitleText": "编辑设备",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/revenue/index",
+      "style": {
+        "navigationBarTitleText": "收益统计",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/revenue/config",
+      "style": {
+        "navigationBarTitleText": "电价配置",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/settings/index",
+      "style": {
+        "navigationBarTitleText": "设置",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/settings/device",
+      "style": {
+        "navigationBarTitleText": "设备参数",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/settings/system",
+      "style": {
+        "navigationBarTitleText": "系统设置",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/settings/communication",
+      "style": {
+        "navigationBarTitleText": "通信参数",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/settings/preferences",
+      "style": {
+        "navigationBarTitleText": "用户偏好",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/settings/about",
+      "style": {
+        "navigationBarTitleText": "关于",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/meter/index",
+      "style": {
+        "navigationBarTitleText": "电表监控",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/meter/analysis",
+      "style": {
+        "navigationBarTitleText": "用电分析",
+        "enablePullDownRefresh": false
+      }
+    },
+    {
+      "path": "pages/meter/bill",
+      "style": {
+        "navigationBarTitleText": "电费账单",
+        "enablePullDownRefresh": false
+      }
+    }
+  ],
+  "tabBar": {
+    "color": "#666666",
+    "selectedColor": "#1296db",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "fontSize": "12px",
+    "height": "50px",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "🏠 监控"
+      },
+      {
+        "pagePath": "pages/statistics/index",
+        "text": "📊 统计"
+      },
+      {
+        "pagePath": "pages/revenue/index",
+        "text": "💰 收益"
+      },
+      {
+        "pagePath": "pages/device/index",
+        "text": "🔧 设备"
+      },
+      {
+        "pagePath": "pages/profile/index",
+        "text": "👤 我的"
+      }
+    ]
+  },
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "125kW混逆监控",
+    "navigationBarBackgroundColor": "#ffffff",
+    "backgroundColor": "#f8f8f8"
+  }
+}

@@ -1,0 +1,38 @@
+/**
+ * 全局样式变量
+ */
+
+/* 颜色变量 */
+$uni-color-primary: #1296db;
+$uni-color-success: #67C23A;
+$uni-color-warning: #E6A23C;
+$uni-color-error: #F56C6C;
+$uni-color-info: #909399;
+
+$uni-bg-color: #f8f8f8;
+$uni-bg-color-grey: #f0f0f0;
+$uni-bg-color-hover: #e8e8e8;
+
+$uni-text-color: #333333;
+$uni-text-color-grey: #666666;
+$uni-text-color-placeholder: #999999;
+
+$uni-border-color: #e5e5e5;
+
+/* 间距 */
+$uni-spacing-sm: 8px;
+$uni-spacing-base: 12px;
+$uni-spacing-lg: 16px;
+
+/* 字体大小 */
+$uni-font-size-sm: 24rpx;
+$uni-font-size-base: 28rpx;
+$uni-font-size-lg: 32rpx;
+
+/* 圆角 */
+$uni-border-radius-sm: 4rpx;
+$uni-border-radius-base: 8rpx;
+$uni-border-radius-lg: 16rpx;
+
+/* 阴影 */
+$uni-shadow-base: 0 2rpx 12rpx rgba(0, 0, 0, 0.05);

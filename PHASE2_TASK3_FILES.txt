@@ -1,0 +1,245 @@
+Phase 2 Task 3 - 文件清单
+================================
+
+创建的文件 (10个)
+--------------------------------
+
+1. 类型定义 (1个)
+   F:\unia\src\types\meter.ts
+
+2. 工具函数 (1个)
+   F:\unia\src\utils\tariff.ts
+
+3. Store 模块 (1个)
+   F:\unia\src\store\modules\meter.ts
+
+4. Mock 数据 (1个)
+   F:\unia\src\mock\meter\realtime.ts
+
+5. 业务组件 (3个)
+   F:\unia\src\components\business\meter-card\index.vue
+   F:\unia\src\components\business\energy-balance\index.vue
+   F:\unia\src\components\business\tariff-pie\index.vue
+
+6. 页面文件 (3个)
+   F:\unia\src\pages\meter\index.vue
+   F:\unia\src\pages\meter\analysis.vue
+   F:\unia\src\pages\meter\bill.vue
+
+修改的文件 (3个)
+--------------------------------
+
+1. 首页
+   F:\unia\src\pages\index\index.vue
+
+2. 收益 Store
+   F:\unia\src\store\modules\revenue.ts
+
+3. 路由配置
+   F:\unia\src\pages.json
+
+文档文件 (3个)
+--------------------------------
+
+1. 总结报告
+   F:\unia\PHASE2_TASK3_SUMMARY.md
+
+2. 验收清单
+   F:\unia\PHASE2_TASK3_CHECKLIST.md
+
+3. 快速启动指南
+   F:\unia\PHASE2_TASK3_QUICKSTART.md
+
+4. 文件清单
+   F:\unia\PHASE2_TASK3_FILES.txt
+
+文件统计
+--------------------------------
+创建文件: 10个
+修改文件: 3个
+文档文件: 4个
+总计: 17个
+
+代码行数统计（估算）
+--------------------------------
+类型定义: ~150 行
+工具函数: ~200 行
+Store模块: ~350 行
+Mock数据: ~250 行
+业务组件: ~900 行 (3个组件)
+页面文件: ~1500 行 (3个页面)
+修改内容: ~100 行
+总计: ~3450 行
+
+目录结构
+--------------------------------
+F:\unia\
+├── src\
+│   ├── types\
+│   │   └── meter.ts                     [新增] 电表类型定义
+│   ├── utils\
+│   │   └── tariff.ts                    [新增] 电价计算工具
+│   ├── store\
+│   │   └── modules\
+│   │       ├── meter.ts                 [新增] 电表Store
+│   │       └── revenue.ts               [修改] 收益Store整合
+│   ├── mock\
+│   │   └── meter\
+│   │       └── realtime.ts              [新增] 电表Mock数据
+│   ├── components\
+│   │   └── business\
+│   │       ├── meter-card\
+│   │       │   └── index.vue            [新增] 电表数据卡片
+│   │       ├── energy-balance\
+│   │       │   └── index.vue            [新增] 能量平衡组件
+│   │       └── tariff-pie\
+│   │           └── index.vue            [新增] 电费饼图组件
+│   ├── pages\
+│   │   ├── index\
+│   │   │   └── index.vue                [修改] 首页整合电表
+│   │   └── meter\
+│   │       ├── index.vue                [新增] 电表监控页面
+│   │       ├── analysis.vue             [新增] 用电分析页面
+│   │       └── bill.vue                 [新增] 电费账单页面
+│   └── pages.json                       [修改] 路由配置
+├── PHASE2_TASK3_SUMMARY.md              [新增] 总结报告
+├── PHASE2_TASK3_CHECKLIST.md            [新增] 验收清单
+├── PHASE2_TASK3_QUICKSTART.md           [新增] 快速启动
+└── PHASE2_TASK3_FILES.txt               [新增] 文件清单
+
+功能模块对应文件
+--------------------------------
+
+1. 电表数据类型
+   - F:\unia\src\types\meter.ts
+
+2. 电价计算
+   - F:\unia\src\utils\tariff.ts
+
+3. 数据管理
+   - F:\unia\src\store\modules\meter.ts
+   - F:\unia\src\mock\meter\realtime.ts
+
+4. UI组件
+   - F:\unia\src\components\business\meter-card\index.vue
+   - F:\unia\src\components\business\energy-balance\index.vue
+   - F:\unia\src\components\business\tariff-pie\index.vue
+
+5. 页面功能
+   - F:\unia\src\pages\meter\index.vue
+   - F:\unia\src\pages\meter\analysis.vue
+   - F:\unia\src\pages\meter\bill.vue
+
+6. 数据整合
+   - F:\unia\src\pages\index\index.vue
+   - F:\unia\src\store\modules\revenue.ts
+   - F:\unia\src\pages.json
+
+依赖关系
+--------------------------------
+
+页面层:
+  meter/index.vue
+    ├─> meter-card (组件)
+    ├─> energy-balance (组件)
+    └─> meterStore (状态)
+
+  meter/analysis.vue
+    ├─> tariff-pie (组件)
+    └─> meterStore (状态)
+
+  meter/bill.vue
+    └─> meterStore (状态)
+
+组件层:
+  meter-card
+    └─> types/meter.ts
+
+  energy-balance
+    └─> types/meter.ts
+
+  tariff-pie
+    ├─> types/meter.ts
+    └─> utils/chart.ts
+
+Store层:
+  meterStore
+    ├─> types/meter.ts
+    ├─> types/revenue.ts
+    ├─> utils/tariff.ts
+    ├─> mock/meter/realtime.ts
+    └─> deviceStore
+
+  revenueStore
+    ├─> utils/tariff.ts
+    └─> meterStore
+
+工具层:
+  tariff.ts
+    ├─> types/revenue.ts
+    └─> types/meter.ts
+
+导入导出关系
+--------------------------------
+
+导出 (Export):
+  types/meter.ts
+    - MeterRealtimeData
+    - ElectricityStats
+    - EnergyBalance
+    - ConsumptionPoint
+    - ConsumptionHistory
+    - ElectricityBill
+
+  utils/tariff.ts
+    - getPeriodType()
+    - getPeriodPrice()
+    - calculateElectricityCost()
+    - calculatePeriodConsumption()
+    - calculateSelfUseRate()
+    - calculateEnergyBalance()
+    - calculatePeriodCost()
+    - calculateSelfUseSaving()
+    - calculateAvgPrice()
+
+  store/modules/meter.ts
+    - useMeterStore
+
+  mock/meter/realtime.ts
+    - generateMeterRealtimeData()
+    - generateConsumptionHistory()
+    - generateDailyConsumptionHistory()
+    - generateEnergyBalance()
+    - generateMockEnergyBalance()
+    - generateEnergyBalanceHistory()
+
+导入 (Import):
+  页面文件导入:
+    - useMeterStore
+    - useRevenueStore
+    - meter-card
+    - energy-balance
+    - tariff-pie
+
+  组件文件导入:
+    - types/meter.ts
+    - utils/chart.ts
+
+  Store文件导入:
+    - types/meter.ts
+    - types/revenue.ts
+    - utils/tariff.ts
+    - mock/meter/realtime.ts
+    - useDeviceStore
+    - useRevenueStore
+
+版本信息
+--------------------------------
+任务: Phase 2 Task 3
+模块: 智能电表集成与能耗分析
+开发日期: 2026-02-12
+开发人员: Claude Code Agent
+状态: 已完成 ✅
+
+---
+生成时间: 2026-02-12
