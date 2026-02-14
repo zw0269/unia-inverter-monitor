@@ -3,71 +3,141 @@
     <scroll-view scroll-y class="page-scroll">
       <view class="settings-content">
         <!-- 外观设置 -->
-        <glass-card class="settings-card">
+        <view class="section-card">
           <view class="card-title">外观设置</view>
-          <select-field
-            v-model="formData.theme"
-            label="主题模式"
-            :options="themeOptions"
-          />
+          <view class="theme-selector">
+            <view class="theme-label">主题模式</view>
+            <view class="theme-options">
+              <view
+                v-for="opt in themeOptions"
+                :key="opt.value"
+                class="theme-option"
+                :class="{ active: formData.theme === opt.value }"
+                @click="formData.theme = opt.value as any"
+              >
+                <view class="theme-icon-wrap" :class="'theme-' + opt.value">
+                  <text class="theme-icon">{{ opt.icon }}</text>
+                </view>
+                <text class="theme-option-label">{{ opt.label }}</text>
+              </view>
+            </view>
+          </view>
           <view class="theme-preview">
             <view class="preview-label">主题预览</view>
             <view class="preview-box" :class="{ 'dark': previewDark }">
               <view class="preview-card">
+                <view class="preview-header">
+                  <view class="preview-dot dot-1" />
+                  <view class="preview-dot dot-2" />
+                  <view class="preview-dot dot-3" />
+                </view>
                 <view class="preview-title">示例卡片</view>
-                <view class="preview-text">这是在当前主题下的显示效果</view>
+                <view class="preview-bar" />
+                <view class="preview-bar short" />
               </view>
             </view>
           </view>
-        </glass-card>
+        </view>
 
         <!-- 单位设置 -->
-        <glass-card class="settings-card">
+        <view class="section-card">
           <view class="card-title">单位设置</view>
-          <select-field
-            v-model="formData.powerUnit"
-            label="功率单位"
-            :options="powerUnitOptions"
-          />
-          <select-field
-            v-model="formData.energyUnit"
-            label="电量单位"
-            :options="energyUnitOptions"
-          />
-          <select-field
-            v-model="formData.currencySymbol"
-            label="货币符号"
-            :options="currencyOptions"
-          />
-          <select-field
-            v-model="formData.temperatureUnit"
-            label="温度单位"
-            :options="temperatureOptions"
-          />
-        </glass-card>
+          <view class="unit-grid">
+            <view class="unit-item">
+              <text class="unit-label">功率单位</text>
+              <view class="unit-options">
+                <view
+                  v-for="opt in powerUnitOptions"
+                  :key="opt.value"
+                  class="unit-chip"
+                  :class="{ active: formData.powerUnit === opt.value }"
+                  @click="formData.powerUnit = opt.value as any"
+                >
+                  {{ opt.label }}
+                </view>
+              </view>
+            </view>
+            <view class="unit-item">
+              <text class="unit-label">电量单位</text>
+              <view class="unit-options">
+                <view
+                  v-for="opt in energyUnitOptions"
+                  :key="opt.value"
+                  class="unit-chip"
+                  :class="{ active: formData.energyUnit === opt.value }"
+                  @click="formData.energyUnit = opt.value as any"
+                >
+                  {{ opt.label }}
+                </view>
+              </view>
+            </view>
+            <view class="unit-item">
+              <text class="unit-label">货币符号</text>
+              <view class="unit-options">
+                <view
+                  v-for="opt in currencyOptions"
+                  :key="opt.value"
+                  class="unit-chip"
+                  :class="{ active: formData.currencySymbol === opt.value }"
+                  @click="formData.currencySymbol = opt.value as any"
+                >
+                  {{ opt.label }}
+                </view>
+              </view>
+            </view>
+            <view class="unit-item">
+              <text class="unit-label">温度单位</text>
+              <view class="unit-options">
+                <view
+                  v-for="opt in temperatureOptions"
+                  :key="opt.value"
+                  class="unit-chip"
+                  :class="{ active: formData.temperatureUnit === opt.value }"
+                  @click="formData.temperatureUnit = opt.value as any"
+                >
+                  {{ opt.label }}
+                </view>
+              </view>
+            </view>
+          </view>
+
+          <!-- 单位预览 -->
+          <view v-if="currentPower > 0" class="unit-preview">
+            <view class="preview-row">
+              <text class="preview-label-text">当前功率</text>
+              <text class="preview-value">{{ formattedPower }}</text>
+            </view>
+            <view class="preview-row">
+              <text class="preview-label-text">今日发电</text>
+              <text class="preview-value">{{ formattedEnergy }}</text>
+            </view>
+            <view class="preview-row">
+              <text class="preview-label-text">设备温度</text>
+              <text class="preview-value">{{ formattedTemp }}</text>
+            </view>
+          </view>
+        </view>
 
         <!-- 格式设置 -->
-        <glass-card class="settings-card">
+        <view class="section-card">
           <view class="card-title">格式设置</view>
           <select-field
             v-model="formData.dateFormat"
             label="日期格式"
             :options="dateFormatOptions"
           />
-          <view class="format-example">
-            <text class="example-label">示例：</text>
-            <text class="example-value">{{ dateExample }}</text>
+          <view class="format-live">
+            <text class="format-now">{{ dateExample }}</text>
           </view>
           <select-field
             v-model="formData.timeFormat"
             label="时间格式"
             :options="timeFormatOptions"
           />
-          <view class="format-example">
-            <text class="example-label">示例：</text>
-            <text class="example-value">{{ timeExample }}</text>
+          <view class="format-live">
+            <text class="format-now">{{ timeExample }}</text>
           </view>
-        </glass-card>
+        </view>
       </view>
     </scroll-view>
 
@@ -82,14 +152,14 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
 import { useSettingsStore } from '@/store/modules/settings'
+import { useDeviceStore } from '@/store/modules/device'
 import type { UserPreferences } from '@/types/settings'
 import dayjs from 'dayjs'
-import GlassCard from '@/components/common/glass-card/index.vue'
 import SelectField from '@/components/forms/select-field/index.vue'
 
 const settingsStore = useSettingsStore()
+const deviceStore = useDeviceStore()
 
-// 表单数据
 const formData = ref<UserPreferences>({
   theme: 'auto',
   powerUnit: 'kW',
@@ -100,32 +170,31 @@ const formData = ref<UserPreferences>({
   timeFormat: '24h'
 })
 
-// 选项列表
 const themeOptions = [
-  { label: '跟随系统', value: 'auto' },
-  { label: '浅色模式', value: 'light' },
-  { label: '深色模式', value: 'dark' }
+  { label: '跟随系统', value: 'auto', icon: '◐' },
+  { label: '浅色', value: 'light', icon: '☀' },
+  { label: '深色', value: 'dark', icon: '☾' }
 ]
 
 const powerUnitOptions = [
-  { label: '千瓦 (kW)', value: 'kW' },
-  { label: '瓦 (W)', value: 'W' }
+  { label: 'kW', value: 'kW' },
+  { label: 'W', value: 'W' }
 ]
 
 const energyUnitOptions = [
-  { label: '千瓦时 (kWh)', value: 'kWh' },
-  { label: '兆瓦时 (MWh)', value: 'MWh' }
+  { label: 'kWh', value: 'kWh' },
+  { label: 'MWh', value: 'MWh' }
 ]
 
 const currencyOptions = [
-  { label: '人民币 (¥)', value: '¥' },
-  { label: '美元 ($)', value: '$' },
-  { label: '欧元 (€)', value: '€' }
+  { label: '¥', value: '¥' },
+  { label: '$', value: '$' },
+  { label: '€', value: '€' }
 ]
 
 const temperatureOptions = [
-  { label: '摄氏度 (℃)', value: '℃' },
-  { label: '华氏度 (℉)', value: '℉' }
+  { label: '℃', value: '℃' },
+  { label: '℉', value: '℉' }
 ]
 
 const dateFormatOptions = [
@@ -139,7 +208,37 @@ const timeFormatOptions = [
   { label: '12小时制', value: '12h' }
 ]
 
-// 预览是否为深色
+// 实时数据
+const currentPower = computed(() => deviceStore.currentPower)
+
+// 格式化后的功率
+const formattedPower = computed(() => {
+  const power = deviceStore.currentPower
+  if (formData.value.powerUnit === 'W') {
+    return (power * 1000).toFixed(0) + ' W'
+  }
+  return power.toFixed(2) + ' kW'
+})
+
+// 格式化后的电量
+const formattedEnergy = computed(() => {
+  const energy = deviceStore.todayEnergy
+  if (formData.value.energyUnit === 'MWh') {
+    return (energy / 1000).toFixed(3) + ' MWh'
+  }
+  return energy.toFixed(2) + ' kWh'
+})
+
+// 格式化后的温度
+const formattedTemp = computed(() => {
+  const temp = deviceStore.temperature
+  if (formData.value.temperatureUnit === '℉') {
+    return (temp * 9 / 5 + 32).toFixed(1) + ' ℉'
+  }
+  return temp.toFixed(1) + ' ℃'
+})
+
+// 主题预览
 const previewDark = computed(() => {
   if (formData.value.theme === 'auto') {
     // #ifdef H5
@@ -152,39 +251,25 @@ const previewDark = computed(() => {
   return formData.value.theme === 'dark'
 })
 
-// 日期示例
-const dateExample = computed(() => {
-  const now = dayjs()
-  return now.format(formData.value.dateFormat)
-})
+const dateExample = computed(() => dayjs().format(formData.value.dateFormat))
 
-// 时间示例
 const timeExample = computed(() => {
-  const now = dayjs()
   if (formData.value.timeFormat === '24h') {
-    return now.format('HH:mm:ss')
-  } else {
-    return now.format('hh:mm:ss A')
+    return dayjs().format('HH:mm:ss')
   }
+  return dayjs().format('hh:mm:ss A')
 })
 
 onMounted(() => {
-  // 加载设置
   formData.value = { ...settingsStore.userPreferences }
 })
 
 function handleSave() {
   try {
     settingsStore.updateUserPreferences(formData.value)
-    uni.showToast({
-      title: '保存成功',
-      icon: 'success'
-    })
+    uni.showToast({ title: '保存成功', icon: 'success' })
   } catch (error) {
-    uni.showToast({
-      title: '保存失败',
-      icon: 'error'
-    })
+    uni.showToast({ title: '保存失败', icon: 'error' })
   }
 }
 
@@ -196,10 +281,7 @@ function handleReset() {
       if (res.confirm) {
         settingsStore.resetToDefaults('user')
         formData.value = { ...settingsStore.userPreferences }
-        uni.showToast({
-          title: '已恢复默认',
-          icon: 'success'
-        })
+        uni.showToast({ title: '已恢复默认', icon: 'success' })
       }
     }
   })
@@ -209,100 +291,260 @@ function handleReset() {
 <style lang="scss" scoped>
 .preferences-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: #f1f5f9;
   display: flex;
   flex-direction: column;
 
   .page-scroll {
     flex: 1;
-    padding: 32rpx;
+    padding: 24rpx 28rpx;
     padding-bottom: 160rpx;
 
     .settings-content {
       display: flex;
       flex-direction: column;
-      gap: 24rpx;
+      gap: 20rpx;
 
-      .settings-card {
+      .section-card {
+        background: #fff;
+        border-radius: 20rpx;
+        padding: 24rpx;
+        box-shadow: 0 1rpx 3rpx rgba(15, 23, 42, 0.04), 0 4rpx 16rpx rgba(15, 23, 42, 0.03);
+        border: 1rpx solid rgba(15, 23, 42, 0.04);
+
         .card-title {
-          font-size: 32rpx;
-          font-weight: 600;
-          color: #333;
-          margin-bottom: 32rpx;
+          font-size: 30rpx;
+          font-weight: 700;
+          color: #0f172a;
+          letter-spacing: 0.5rpx;
+          margin-bottom: 24rpx;
           padding-bottom: 16rpx;
-          border-bottom: 2rpx solid #f0f0f0;
+          border-bottom: 1rpx solid #f1f5f9;
         }
 
-        .theme-preview {
-          margin-top: 32rpx;
+        // 主题选择器
+        .theme-selector {
+          margin-bottom: 24rpx;
 
-          .preview-label {
-            font-size: 28rpx;
-            color: #333;
+          .theme-label {
+            font-size: 26rpx;
+            font-weight: 600;
+            color: #475569;
             margin-bottom: 16rpx;
-            font-weight: 500;
+          }
+
+          .theme-options {
+            display: flex;
+            gap: 16rpx;
+
+            .theme-option {
+              flex: 1;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 10rpx;
+              padding: 20rpx 12rpx;
+              background: #f8fafc;
+              border-radius: 16rpx;
+              border: 2rpx solid transparent;
+              cursor: pointer;
+              transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+              &.active {
+                border-color: #0ea5e9;
+                background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(6, 182, 212, 0.04));
+              }
+
+              &:active {
+                transform: scale(0.97);
+              }
+
+              .theme-icon-wrap {
+                width: 64rpx;
+                height: 64rpx;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                .theme-icon {
+                  font-size: 36rpx;
+                }
+
+                &.theme-auto {
+                  background: linear-gradient(135deg, #f1f5f9 50%, #1e293b 50%);
+                }
+
+                &.theme-light {
+                  background: #f8fafc;
+                }
+
+                &.theme-dark {
+                  background: #1e293b;
+                }
+              }
+
+              .theme-option-label {
+                font-size: 24rpx;
+                font-weight: 500;
+                color: #0f172a;
+              }
+            }
+          }
+        }
+
+        // 主题预览
+        .theme-preview {
+          .preview-label {
+            font-size: 26rpx;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 12rpx;
           }
 
           .preview-box {
-            padding: 24rpx;
-            background: #f5f5f5;
-            border-radius: 12rpx;
-            transition: all 0.3s;
+            padding: 20rpx;
+            background: #f8fafc;
+            border-radius: 14rpx;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
             &.dark {
-              background: #1a1a1a;
+              background: #0f172a;
 
               .preview-card {
-                background: #2a2a2a;
-                border-color: rgba(255, 255, 255, 0.1);
+                background: #1e293b;
+                border-color: rgba(255, 255, 255, 0.06);
 
-                .preview-title {
-                  color: #e0e0e0;
-                }
-
-                .preview-text {
-                  color: #999;
-                }
+                .preview-title { color: #e2e8f0; }
+                .preview-bar { background: rgba(255, 255, 255, 0.1); }
               }
             }
 
             .preview-card {
               background: #fff;
-              border: 2rpx solid #e0e0e0;
-              border-radius: 8rpx;
-              padding: 24rpx;
+              border: 1rpx solid #e2e8f0;
+              border-radius: 10rpx;
+              padding: 20rpx;
+              transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+              .preview-header {
+                display: flex;
+                gap: 8rpx;
+                margin-bottom: 16rpx;
+
+                .preview-dot {
+                  width: 16rpx;
+                  height: 16rpx;
+                  border-radius: 50%;
+
+                  &.dot-1 { background: #ff5f57; }
+                  &.dot-2 { background: #febc2e; }
+                  &.dot-3 { background: #28c840; }
+                }
+              }
 
               .preview-title {
-                font-size: 28rpx;
-                font-weight: 600;
-                color: #333;
+                font-size: 26rpx;
+                font-weight: 700;
+                color: #0f172a;
+                letter-spacing: 0.5rpx;
                 margin-bottom: 12rpx;
               }
 
-              .preview-text {
-                font-size: 24rpx;
-                color: #666;
-                line-height: 1.5;
+              .preview-bar {
+                height: 12rpx;
+                background: #f1f5f9;
+                border-radius: 6rpx;
+                margin-bottom: 8rpx;
+
+                &.short { width: 60%; }
               }
             }
           }
         }
 
-        .format-example {
+        // 单位网格
+        .unit-grid {
           display: flex;
-          align-items: center;
-          padding: 16rpx 0;
-          margin-bottom: 24rpx;
+          flex-direction: column;
+          gap: 20rpx;
 
-          .example-label {
-            font-size: 24rpx;
-            color: #999;
-            margin-right: 12rpx;
+          .unit-item {
+            .unit-label {
+              font-size: 26rpx;
+              font-weight: 600;
+              color: #475569;
+              margin-bottom: 12rpx;
+              display: block;
+            }
+
+            .unit-options {
+              display: flex;
+              gap: 12rpx;
+
+              .unit-chip {
+                flex: 1;
+                text-align: center;
+                padding: 14rpx 0;
+                font-size: 26rpx;
+                font-weight: 500;
+                color: #475569;
+                background: #f8fafc;
+                border-radius: 12rpx;
+                border: 1rpx solid transparent;
+                cursor: pointer;
+                transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+
+                &.active {
+                  color: #0ea5e9;
+                  border-color: #0ea5e9;
+                  background: linear-gradient(135deg, rgba(14, 165, 233, 0.08), rgba(6, 182, 212, 0.04));
+                }
+
+                &:active {
+                  transform: scale(0.97);
+                }
+              }
+            }
           }
+        }
 
-          .example-value {
+        // 单位预览
+        .unit-preview {
+          margin-top: 20rpx;
+          padding: 16rpx 20rpx;
+          background: #f8fafc;
+          border: 1rpx solid #f1f5f9;
+          border-radius: 14rpx;
+
+          .preview-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8rpx 0;
+
+            .preview-label-text {
+              font-size: 24rpx;
+              font-weight: 500;
+              color: #94a3b8;
+            }
+
+            .preview-value {
+              font-size: 26rpx;
+              color: #0ea5e9;
+              font-weight: 700;
+            }
+          }
+        }
+
+        // 格式实时预览
+        .format-live {
+          padding: 10rpx 20rpx;
+          margin-bottom: 16rpx;
+
+          .format-now {
             font-size: 24rpx;
-            color: #2979ff;
+            color: #0ea5e9;
             font-weight: 600;
           }
         }
@@ -318,83 +560,36 @@ function handleReset() {
     display: flex;
     gap: 24rpx;
     padding: 24rpx 32rpx;
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-top: 2rpx solid rgba(0, 0, 0, 0.05);
-    box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(16px);
+    border-top: 1rpx solid #e2e8f0;
 
     .action-btn {
       flex: 1;
       height: 88rpx;
-      border-radius: 16rpx;
-      font-size: 32rpx;
+      border-radius: 18rpx;
+      font-size: 30rpx;
       font-weight: 600;
       border: none;
-      transition: all 0.3s;
+      transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
 
       &.primary {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #0ea5e9, #06b6d4);
         color: #fff;
+        box-shadow: 0 4rpx 16rpx rgba(14, 165, 233, 0.25);
 
         &:active {
-          opacity: 0.8;
+          transform: scale(0.97);
         }
       }
 
       &.secondary {
-        background: #f5f5f5;
-        color: #666;
+        background: #f8fafc;
+        color: #475569;
+        border: 1rpx solid #e2e8f0;
 
         &:active {
-          background: #e0e0e0;
-        }
-      }
-    }
-  }
-}
-
-/* 深色模式 */
-@media (prefers-color-scheme: dark) {
-  .preferences-page {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-
-    .page-scroll {
-      .settings-content {
-        .settings-card {
-          .card-title {
-            color: #e0e0e0;
-            border-bottom-color: rgba(255, 255, 255, 0.1);
-          }
-
-          .theme-preview {
-            .preview-label {
-              color: #e0e0e0;
-            }
-          }
-
-          .format-example {
-            .example-label {
-              color: #666;
-            }
-
-            .example-value {
-              color: #4da6ff;
-            }
-          }
-        }
-      }
-    }
-
-    .bottom-actions {
-      background: rgba(0, 0, 0, 0.8);
-      border-top-color: rgba(255, 255, 255, 0.1);
-
-      .action-btn.secondary {
-        background: rgba(255, 255, 255, 0.08);
-        color: #e0e0e0;
-
-        &:active {
-          background: rgba(255, 255, 255, 0.12);
+          transform: scale(0.97);
         }
       }
     }

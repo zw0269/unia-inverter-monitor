@@ -56,11 +56,34 @@ export interface ValidationRule {
 // 设置分类
 export type SettingsCategory = 'device' | 'system' | 'comm' | 'user'
 
-// 设置分类信息
+// 设置分类信息（扩展支持状态摘要）
 export interface SettingsCategoryInfo {
   key: SettingsCategory
   name: string
   description: string
   icon: string
   route: string
+}
+
+// 分类实时状态（用于设置首页状态徽标）
+export interface CategoryStatus {
+  key: SettingsCategory | 'about'
+  status: 'normal' | 'warning' | 'error' | 'syncing'
+  summary: string // 简短状态摘要，如 "蓝牙已连接" / "3 项已修改"
+}
+
+// 设置变更记录（用于跨 Agent 通信）
+export interface SettingsChangeRecord {
+  category: SettingsCategory
+  changedFields: string[]
+  previousValues: Record<string, any>
+  newValues: Record<string, any>
+  timestamp: number
+}
+
+// 诊断信息
+export interface DiagnosticInfo {
+  label: string
+  value: string
+  status: 'ok' | 'warning' | 'error'
 }

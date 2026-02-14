@@ -1,5 +1,5 @@
 /**
- * 设备数据管理 Store
+ * 设备数据管理 Store — 带跨 Agent 事件通信
  */
 
 import { defineStore } from 'pinia'
@@ -9,6 +9,7 @@ import type { SavedDevice } from '@/types/device-add'
 import { DeviceStatus, DeviceType } from '@/types/device'
 import { hybridBluetooth } from '@/api/bluetooth/hybrid'
 import { generateHistoryData } from '@/mock/device/realtime'
+import { agentBus } from '@/utils/event-bus'
 
 const STORAGE_KEY_DEVICES = 'saved_devices'
 const STORAGE_KEY_CURRENT_DEVICE = 'current_device_id'
@@ -108,6 +109,14 @@ export const useDeviceStore = defineStore('device', () => {
     // 只保留最近12小时的数据
     const cutoffTime = Date.now() - 12 * 60 * 60 * 1000
     historyData.value = historyData.value.filter(point => point.timestamp > cutoffTime)
+
+    // 通知其他 agent：实时数据已更新
+    agentBus.emit('device:realtime:updated', {
+      power: data.acPower,
+      energy: data.todayEnergy,
+      temperature: data.temperature,
+      status: data.status
+    }, 'device')
   }
 
   /**
@@ -120,7 +129,29 @@ export const useDeviceStore = defineStore('device', () => {
     if (alarms.value.length > 100) {
       alarms.value = alarms.value.slice(0, 100)
     }
+
+    // 通知其他 agent：新报警
+    agentBus.emit('device:alarm:added', {
+      alarm,
+      totalUnresolved: alarms.value.filter(a => !a.resolved).length
+    }, 'device')
   }
+
+  /**
+   * 监听来自 Settings Agent 的设备参数变更
+   */
+  function setupAgentListeners(): void {
+    agentBus.on('settings:device:changed', (event) => {
+      console.log('[Device Agent] 设备参数已变更:', event.payload.changedFields)
+      // 参数变更后可同步到实际设备（通过蓝牙发送）
+      agentBus.emit('device:params:synced', {
+        params: event.payload.params,
+        synced: false // 标记为待同步
+      }, 'device')
+    })
+  }
+
+  setupAgentListeners()
 
   /**
    * 解决报警

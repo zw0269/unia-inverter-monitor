@@ -21,6 +21,7 @@ import {
   calculateSelfUseRate as calcSelfUseRate
 } from '@/utils/revenue'
 import { calculateEnergyBalance } from '@/utils/tariff'
+import { agentBus } from '@/utils/event-bus'
 import dayjs from 'dayjs'
 
 const STORAGE_KEY_TARIFF = 'tariff_config'
@@ -76,6 +77,11 @@ export const useRevenueStore = defineStore('revenue', () => {
     tariffConfig.value = config
     try {
       uni.setStorageSync(STORAGE_KEY_TARIFF, JSON.stringify(config))
+      agentBus.emit('revenue:tariff:changed', {
+        peakPrice: config.peakPrice,
+        valleyPrice: config.valleyPrice,
+        flatPrice: config.flatPrice
+      }, 'revenue')
     } catch (error) {
       console.error('保存电价配置失败:', error)
     }
@@ -217,6 +223,11 @@ export const useRevenueStore = defineStore('revenue', () => {
         changeRate: 0
       }
     }
+
+    agentBus.emit('revenue:overview:refreshed', {
+      todayRevenue: revenueOverview.value.todayRevenue,
+      trend: revenueOverview.value.trend
+    }, 'revenue')
   }
 
   /**
@@ -352,6 +363,34 @@ export const useRevenueStore = defineStore('revenue', () => {
       .sort((a, b) => dayjs(b.date).valueOf() - dayjs(a.date).valueOf())
   }
 
+  /**
+   * 设置 Agent 监听器 — 响应其他 Store 的事件
+   */
+  function setupAgentListeners() {
+    // 设备实时数据更新时，重新计算今日收益
+    agentBus.on('device:realtime:updated', (event) => {
+      const { energy } = event.payload
+      if (energy > 0) {
+        const selfUseEnergy = energy * 0.7
+        const gridEnergy = energy * 0.3
+        addTodayRevenue(energy, selfUseEnergy, gridEnergy)
+      }
+    })
+
+    // 设置变更时（如用户偏好中的货币符号），刷新概览
+    agentBus.on('settings:user:changed', () => {
+      updateRevenueOverview()
+    })
+
+    // 电表数据更新时，用实际用电数据修正自用比例
+    agentBus.on('meter:realtime:updated', (event) => {
+      const { todayConsumption } = event.payload
+      if (todayConsumption > 0) {
+        updateRevenueOverview()
+      }
+    })
+  }
+
   // 计算属性
   const todayRevenue = computed(() => revenueOverview.value.todayRevenue)
   const todayEnergy = computed(() => revenueOverview.value.todayEnergy)
@@ -379,6 +418,7 @@ export const useRevenueStore = defineStore('revenue', () => {
     updateRevenueOverview,
     getRevenueStats,
     getRevenueTrendData,
-    getRevenueHistoryList
+    getRevenueHistoryList,
+    setupAgentListeners
   }
 })

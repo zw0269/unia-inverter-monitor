@@ -1,9 +1,10 @@
 /**
- * 应用全局状态 Store
+ * 应用全局状态 Store — 带跨 Agent 事件通信
  */
 
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { agentBus } from '@/utils/event-bus'
 
 export const useAppStore = defineStore('app', () => {
   // 主题模式（保留用于兼容，但将从 settings store 获取）
@@ -102,8 +103,42 @@ export const useAppStore = defineStore('app', () => {
       console.error('初始化设置失败:', error)
     }
 
+    // 设置跨 Agent 监听
+    setupAgentListeners()
+
     initialized.value = true
+
+    // 通知其他 agent：应用已初始化
+    agentBus.emit('app:initialized', { version: appVersion.value }, 'app')
     console.log('应用初始化完成')
+  }
+
+  /**
+   * 监听来自其他 Agent 的事件
+   */
+  function setupAgentListeners(): void {
+    // 监听主题变更事件
+    agentBus.on('app:theme:changed', (event) => {
+      applyTheme(event.payload.isDark)
+    })
+
+    // 监听系统设置变更（语言变化等）
+    agentBus.on('settings:system:changed', (event) => {
+      const { changedFields } = event.payload
+      if (changedFields.includes('language')) {
+        console.log('[App Agent] 语言设置已变更')
+      }
+    })
+
+    // 监听用户偏好变更
+    agentBus.on('settings:user:changed', (event) => {
+      const { changedFields, preferences } = event.payload
+      if (changedFields.includes('theme')) {
+        const isDark = preferences.theme === 'dark' ||
+          (preferences.theme === 'auto' && typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: dark)').matches)
+        applyTheme(isDark)
+      }
+    })
   }
 
   return {

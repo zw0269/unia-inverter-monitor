@@ -27,6 +27,7 @@ import {
   calculateEnergyBalance,
   calculateAvgPrice
 } from '@/utils/tariff'
+import { agentBus } from '@/utils/event-bus'
 import { useRevenueStore } from './revenue'
 import { useDeviceStore } from './device'
 import dayjs from 'dayjs'
@@ -85,6 +86,13 @@ export const useMeterStore = defineStore('meter', () => {
       // 生成模拟数据
       realtimeData.value = generateMeterRealtimeData()
     }
+
+    agentBus.emit('meter:realtime:updated', {
+      power: realtimeData.value.power,
+      todayConsumption: realtimeData.value.todayConsumption,
+      voltage: realtimeData.value.voltage,
+      frequency: realtimeData.value.frequency
+    }, 'meter')
   }
 
   /**
@@ -226,6 +234,13 @@ export const useMeterStore = defineStore('meter', () => {
 
     // 计算能量平衡
     energyBalance.value = calculateEnergyBalance(generation, consumption)
+
+    agentBus.emit('meter:balance:updated', {
+      generation,
+      consumption,
+      selfUse: energyBalance.value.selfUse,
+      gridFeed: energyBalance.value.gridFeed
+    }, 'meter')
   }
 
   /**
@@ -349,6 +364,34 @@ export const useMeterStore = defineStore('meter', () => {
   }
 
   /**
+   * 设置 Agent 监听器 — 响应其他 Store 的事件
+   */
+  function setupAgentListeners() {
+    // 设备实时数据更新时，同步更新能量平衡
+    agentBus.on('device:realtime:updated', () => {
+      updateEnergyBalance()
+    })
+
+    // 收益电价变更时，重新计算统计数据
+    agentBus.on('revenue:tariff:changed', () => {
+      if (currentStats.value) {
+        calculateStats(currentStats.value.period as 'day' | 'week' | 'month' | 'year')
+      }
+    })
+
+    // 设置重置时，重新生成历史数据
+    agentBus.on('settings:reset', () => {
+      generateMockDailyHistory()
+      generateMockBills()
+    })
+
+    // 系统设置变更时（如数据刷新间隔），刷新实时数据
+    agentBus.on('settings:system:changed', () => {
+      updateRealtimeData()
+    })
+  }
+
+  /**
    * 获取今日统计
    */
   const todayStats = computed(() => {
@@ -384,6 +427,7 @@ export const useMeterStore = defineStore('meter', () => {
     calculateStats,
     updateEnergyBalance,
     getBills,
-    generateMockBills
+    generateMockBills,
+    setupAgentListeners
   }
 })

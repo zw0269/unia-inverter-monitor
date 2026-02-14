@@ -1,5 +1,5 @@
 /**
- * 蓝牙连接管理 Store
+ * 蓝牙连接管理 Store — 带跨 Agent 事件通信
  */
 
 import { defineStore } from 'pinia'
@@ -7,6 +7,7 @@ import { ref, computed } from 'vue'
 import type { BluetoothDevice, ConnectionStatus } from '@/types/bluetooth'
 import { hybridBluetooth } from '@/api/bluetooth/hybrid'
 import { filterDevicesByName, sortDevicesByRSSI } from '@/utils/device-filter'
+import { agentBus } from '@/utils/event-bus'
 
 export const useBluetoothStore = defineStore('bluetooth', () => {
   // 状态
@@ -75,6 +76,8 @@ export const useBluetoothStore = defineStore('bluetooth', () => {
       } else {
         discoveredDevices.value.push(device)
       }
+      // 通知其他 agent：发现新设备
+      agentBus.emit('bluetooth:device:found', { device, total: discoveredDevices.value.length }, 'bluetooth')
     })
 
     // 连接状态变化回调
@@ -85,8 +88,44 @@ export const useBluetoothStore = defineStore('bluetooth', () => {
       } else if (status === 'disconnected') {
         connectedDevice.value = null
       }
+      // 通知其他 agent：连接状态变化
+      agentBus.emit('bluetooth:status:changed', {
+        status,
+        device: connectedDevice.value
+      }, 'bluetooth')
     })
   }
+
+  /**
+   * 监听来自 Settings Agent 的通信参数变更
+   */
+  function setupAgentListeners(): void {
+    agentBus.on('settings:comm:changed', (event) => {
+      const { params, changedFields } = event.payload
+      // 蓝牙开关变化
+      if (changedFields.includes('bluetoothEnabled')) {
+        if (!params.bluetoothEnabled && isConnected.value) {
+          disconnect()
+        }
+      }
+      // 自动连接变化
+      if (changedFields.includes('bluetoothAutoConnect') && params.bluetoothAutoConnect && params.bluetoothEnabled) {
+        if (!isConnected.value && !isConnecting.value) {
+          // 尝试自动连接最近使用的设备
+          console.log('[Bluetooth Agent] 自动连接已启用')
+        }
+      }
+    })
+
+    // 监听设置重置
+    agentBus.on('settings:reset', (event) => {
+      if (event.payload.category === 'comm') {
+        console.log('[Bluetooth Agent] 通信设置已重置')
+      }
+    })
+  }
+
+  setupAgentListeners()
 
   /**
    * 开始扫描设备

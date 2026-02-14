@@ -3,10 +3,14 @@ import { onLaunch, onShow, onHide } from '@dcloudio/uni-app'
 import { useAppStore } from '@/store/modules/app'
 import { useBluetoothStore } from '@/store/modules/bluetooth'
 import { useDeviceStore } from '@/store/modules/device'
+import { useRevenueStore } from '@/store/modules/revenue'
+import { useMeterStore } from '@/store/modules/meter'
 
 const appStore = useAppStore()
 const bluetoothStore = useBluetoothStore()
 const deviceStore = useDeviceStore()
+const revenueStore = useRevenueStore()
+const meterStore = useMeterStore()
 
 onLaunch(() => {
   console.log('App Launch')
@@ -18,6 +22,10 @@ onLaunch(() => {
 
   // 初始化设备数据监听
   deviceStore.initDataListener()
+
+  // 初始化收益与电表 Agent 监听
+  revenueStore.setupAgentListeners()
+  meterStore.setupAgentListeners()
 })
 
 onShow(() => {
